@@ -1,4 +1,5 @@
-# HDT9
-Hoja de trabajo 9  17/04/23
+# HDT7
+# Nombre
 Javier Alejandro Ovalle Chiquín 
-Carne 22103
+# Carné
+Carné 22103

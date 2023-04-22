@@ -1,84 +1,135 @@
-import java.io.*;
+import java.util.Scanner;
 import java.util.*;
-
-public class Main {
+import java.util.ArrayList;
+import java.io.*;
+public class main{
+/**
+ * 
+ * @param args
+ */
     public static void main(String[] args) {
-        Scanner scanner = new Scanner(System.in);
-        Map<String, String> dictionary;
-
-        System.out.println("Seleccione el tipo de árbol a utilizar:");
-        System.out.println("1. Red Black Tree");
-        System.out.println("2. Splay Tree");
-        System.out.println("3. Binary Search Tree");
-
-        int option = scanner.nextInt();
-
-        if (option == 1) {
-            dictionary = new RedBlackTree<>();
-        } else if (option == 2) {
-            dictionary = new SplayTree<>();
-        } else {
-            dictionary = new BinarySearchTree<>();
-        }
-
-        try {
-            Scanner fileScanner = new Scanner(new File("spanish.txt"));
-            while (fileScanner.hasNextLine()) {
-                String[] line = fileScanner.nextLine().split("=");
-                dictionary.put(line[0].trim(), line[1].trim());
+        Scanner in = new Scanner(System.in);
+        Dictionary dict = new Dictionary("diccionario.txt");
+        int op = 0;
+        while (op == 0) {
+            System.out.println("¿Que tipo de arbol desea utilizar?\n1. BinarySearchTree \n2. RedBlackTree");
+            int option0 = Integer.parseInt(in.nextLine());
+            switch(option0){
+                case 1:
+                    System.out.println("----------Bienvenido a mi propio diccionario----------\n 1. Traducir palabra\n 2. Traducir oracion\n 3. Detectar idioma \n 4. salir");
+                    int option = Integer.parseInt(in.nextLine());
+                    Scanner palabras = new Scanner(System.in);
+                    switch (option){
+                        case 1: 
+                            System.out.println("¿De que idioma quiere traducir?: \n 1. Inglés\n 2. Español\n 3. Francés");
+                            int languageOption1 = Integer.parseInt(in.nextLine());
+                            String language1;
+                            switch (languageOption1) {
+                                case 1:
+                                    language1 = "english";
+                                    break;
+                                case 2:
+                                    language1 = "spanish";
+                                    break;
+                                case 3:
+                                    language1 = "french";
+                                    break;
+                                default:
+                                    language1 = "";
+                                    break;
+                            }
+                            System.out.println("Ingrese la palabra que quiera traducir, para ver las palabras que tiene el diccionario revise el archivo txt");
+                            String word = palabras.next();
+                            System.out.println("Seleccione el idioma que desea traducir:\n 1. Inglés\n 2. Español\n 3. Francés");
+                            int languageOption = Integer.parseInt(in.nextLine());
+                            String language;
+                            switch (languageOption) {
+                                case 1:
+                                    language = "english";
+                                    break;
+                                case 2:
+                                    language = "spanish";
+                                    break;
+                                case 3:
+                                    language = "french";
+                                    break;
+                                default:
+                                    language = "";
+                                    break;
+                            }
+                            String translation = dict.translate(word, language, language1);
+                            if (translation == null) {
+                                System.out.println("La palabra no se encontró en el diccionario.");
+                            } else {
+                                System.out.println(word + " -> " + translation);
+                            }
+                            break;
+                        case 2:
+                            System.out.println("¿De qué idioma quiere traducir?: \n 1. Inglés\n 2. Español\n 3. Francés");
+                            int languageOption2 = Integer.parseInt(in.nextLine());
+                            String language2;
+                            switch (languageOption2) {
+                                case 1:
+                                    language2 = "english";
+                                    break;
+                                case 2:
+                                    language2 = "spanish";
+                                    break;
+                                case 3:
+                                    language2 = "french";
+                                    break;
+                                default:
+                                    language2 = "";
+                                    break;
+                            }
+                            System.out.println("Ingrese la oración que quiera traducir:");
+                            String sentence = in.nextLine();
+                            String[] words = sentence.split(" ");
+                            System.out.println("¿A que idioma quieres traducirla?: \n 1. Inglés\n 2. Español\n 3. Francés");
+                            int languageOption3 = Integer.parseInt(in.nextLine());
+                            String language3;
+                            switch (languageOption3) {
+                                case 1:
+                                    language3 = "english";
+                                    break;
+                                case 2:
+                                    language3 = "spanish";
+                                    break;
+                                case 3:
+                                    language3 = "french";
+                                    break;
+                                default:
+                                    language3 = "";
+                                    break;
+                            }
+                            ArrayList<String> translatedWords = new ArrayList<String>();
+                            for (String word2 : words) {
+                                String translation2 = dict.translate(word2, language3, language2); 
+                                if (translation2 == "Translation no found") {
+                                    translatedWords.add("\"" + word2 + "\"");
+                                } else {
+                                    translatedWords.add(translation2);
+                                }
+                            }
+                            String translatedSentence = String.join(" ", translatedWords);
+                            System.out.println(translatedSentence);
+                            break;
+                        case 3:
+                            System.out.println("Ingrese la palabra");
+                            String palabra = in.nextLine();
+                            String lenguage2002 = dict.detectLenguage(palabra);
+                            System.out.println(lenguage2002);
+                            break;
+                        case 4:
+                            op = 1;
+                            System.out.println("Gracias por usar este diccionario :)");
+                    break;
             }
-            fileScanner.close();
-        } catch (FileNotFoundException e) {
-            System.out.println("No se encontró el archivo.");
-            return;
-        }
-
-        scanner.nextLine(); // Clear scanner buffer
-
-        System.out.println("Seleccione una opción:");
-        System.out.println("1. Leer archivo");
-        System.out.println("2. Ingresar oración");
-
-        int choice = scanner.nextInt();
-        scanner.nextLine(); // Clear scanner buffer
-
-        if (choice == 1) {
-            System.out.println("Ingrese el nombre del archivo:");
-            String fileName = scanner.nextLine();
-
-            try {
-                Scanner fileScanner = new Scanner(new File(fileName));
-                while (fileScanner.hasNextLine()) {
-                    String line = fileScanner.nextLine();
-                    String[] words = line.split("\\s+");
-                    for (String word : words) {
-                        String translatedWord = dictionary.get(word.toLowerCase());
-                        if (translatedWord == null) {
-                            translatedWord = "*" + word.toLowerCase() + "*";
-                        }
-                        System.out.print(translatedWord + " ");
-                    }
-                    System.out.println();
-                }
-                fileScanner.close();
-            } catch (FileNotFoundException e) {
-                System.out.println("No se encontró el archivo.");
-                return;
+                    break;
+                case 2:
+                    break;
             }
-
-        } else if (choice == 2) {
-            System.out.println("Ingrese la oración a traducir:");
-            String sentence = scanner.nextLine();
-            String[] words = sentence.split("\\s+");
-
-            for (String word : words) {
-                String translatedWord = dictionary.get(word.toLowerCase());
-                if (translatedWord == null) {
-                    translatedWord = "*" + word.toLowerCase() + "*";
-                }
-                System.out.print(translatedWord + " ");
-            }
-            System.out.println();
+         }
         }
     }
-}
+
